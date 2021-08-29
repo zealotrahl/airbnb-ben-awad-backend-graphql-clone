@@ -1,25 +1,32 @@
 {
-  "name": "node-ts-graphql-boilerplate",
+  "name": "node-graphql-boilerplate",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec ts-node src/index.ts"
+    "start": "nodemon src/index.js"
+  },
+  "_moduleAliases": {
+    "@src": "src"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/ws": "^4.0.1",
+    "cross-env": "^7.0.3",
     "eslint": "^7.32.0",
-    "nodemon": "^1.17.1",
-    "ts-node": "^5.0.1",
-    "tslint": "^5.9.1",
-    "tslint-config-prettier": "^1.9.0",
-    "typescript": "^2.7.2"
+    "nodemon": "^1.17.1"
   },
   "dependencies": {
+    "dotenv": "^10.0.0",
+    "esm": "^3.2.25",
+    "express-rate-limit": "^5.3.0",
     "graphql-yoga": "^1.4.3",
-    "prettier": "^2.3.2"
+    "merge-graphql-schemas": "^1.7.8",
+    "module-alias": "^2.2.2",
+    "mongoose": "^6.0.2",
+    "prettier": "^2.3.2",
+    "reflect-metadata": "^0.1.13",
+    "yup": "^0.32.9"
   }
 }

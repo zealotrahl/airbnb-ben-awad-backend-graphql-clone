@@ -1,0 +1,36 @@
+[
+  {
+    "name": "dev",
+    "type": "mongo",
+    "host": "localhost",
+    "port": 3222,
+    "username": "mongo",
+    "password": "",
+    "database": "airbnb-backend-graphql-clone",
+    "synchronize": true,
+    "logging": true,
+    "entities": ["src/entity/**/*.js"],
+    "migrations": ["src/migration/**/*.js"],
+    "subscribers": ["src/subscriber/**/*.js"],
+    "cli": {
+      "entitiesDir": "src/entity"
+    }
+  },
+  {
+    "name": "test",
+    "type": "mongo",
+    "host": "localhost",
+    "port": 3222,
+    "username": "mongo",
+    "password": "",
+    "database": "airbnb-backend-graphql-clone",
+    "synchronize": true,
+    "logging": false,
+    "entities": ["src/entity/**/*.js"],
+    "migrations": ["src/migration/**/*.js"],
+    "subscribers": ["src/subscriber/**/*.js"],
+    "cli": {
+      "entitiesDir": "src/entity"
+    }
+  }
+]
