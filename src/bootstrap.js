@@ -1,8 +1,9 @@
-require('reflect-metadata');
+require('module-alias/register');
 require('dotenv').config();
 const { GraphQLServer } = require('graphql-yoga');
 const RateLimit = require('express-rate-limit');
 
+const connectToDb = require('./utils/database-connector');
 const { genSchema } = require('./utils/generate-schema');
 const { testRoute } = require('./routes/test-route');
 
@@ -14,6 +15,8 @@ module.exports.startServer = async () => {
       req: request,
     }),
   });
+
+  await connectToDb();
 
   server.express.use(
     new RateLimit({
@@ -30,11 +33,14 @@ module.exports.startServer = async () => {
     origin: process.env.NODE_ENV === 'test' ? '*' : process.env.FRONTEND_HOST,
   };
 
+  const appPort = process.env.NODE_ENV === 'test' ? 4040 : 4000;
+
   const app = await server.start({
+    playground: '/playground',
     cors,
-    port: process.env.NODE_ENV === 'test' ? 0 : 4000,
+    port: appPort,
   });
-  console.log('Server is running on localhost:4000');
+  console.log(`Server is running on localhost:${appPort}`);
 
   return app;
 };

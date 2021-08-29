@@ -1,30 +1,84 @@
-import * as faker from 'faker';
+const test = require('ava');
 
-import { UserModel } from 'src/entity/user/User.model';
-import {
+const faker = require('faker');
+require('module-alias/register');
+require('dotenv').config();
+const { UserModel } = require('@src/entity/user/User.model');
+const {
   duplicateEmail,
   emailNotLongEnough,
   invalidEmail,
   passwordNotLongEnough,
-} from './errorMessages';
-import { TestClient } from 'src/utils/TestClient';
+} = require('./error-messages');
+const {
+  createTestDatabaseConnection,
+} = require('@src/test-utils/create-test-database-connection');
+
+const { TestClient } = require('@src/test-utils/test-client');
 
 faker.seed(Date.now() + 5);
 const email = faker.internet.email();
 const password = faker.internet.password();
 
 const client = new TestClient(process.env.TEST_HOST);
+test.before(async (t) => {
+  // Before All Create connection
+  await createTestDatabaseConnection();
+});
 
-let conn;
-// Before All Create connection
-// After All Close connection
+test.after(async (t) => {
+  // After All Close connection
+});
 
-// user signup tests group
-// Check that we can register user
-// Check if we can handle duplicate users error
+test.serial('user signup success test', async (t) => {
+  const response = await client.signup(email, password);
+  t.deepEqual(response.data, {
+    signup: null,
+  });
+  const foundUser = await UserModel.findOne({
+    email,
+  });
+  t.assert(foundUser);
+  t.assert(foundUser.email === email);
+});
 
-// Check for bad email input
+test.serial('user signup bad email test', async (t) => {
+  const response = await client.signup('b', password);
+  t.deepEqual(response.data, {
+    signup: [
+      {
+        path: 'email',
+        message: emailNotLongEnough,
+      },
+      {
+        path: 'email',
+        message: invalidEmail,
+      },
+    ],
+  });
+});
 
-// Check for bad password input
+test.serial('user signup duplicate email', async (t) => {
+  const response = await client.signup(email, password);
+  t.deepEqual(response.data, {
+    signup: [
+      {
+        path: 'email',
+        message: duplicateEmail,
+      },
+    ],
+  });
+});
 
-// Check bad password and bad email
+test.serial('user signup bad password', async (t) => {
+  const response = await client.signup(email, '1');
+
+  t.deepEqual(response.data, {
+    signup: [
+      {
+        path: 'password',
+        message: passwordNotLongEnough,
+      },
+    ],
+  });
+});

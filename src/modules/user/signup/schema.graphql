@@ -1,3 +1,7 @@
 type Mutation {
-  signin(email: String!, password: String!): [Error!]
+  signup(email: String!, password: String!): [Error!]
+}
+
+type Query {
+  hello: String!
 }

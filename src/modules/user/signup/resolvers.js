@@ -15,8 +15,13 @@ const schema = yup.object().shape({
 });
 
 module.exports.resolvers = {
+  Query: {
+    hello() {
+      return 'Hello world';
+    },
+  },
   Mutation: {
-    signin: async (_, args) => {
+    signup: async (_, args) => {
       try {
         await schema.validate(args, { abortEarly: false });
       } catch (err) {
@@ -25,10 +30,12 @@ module.exports.resolvers = {
 
       const { email, password } = args;
 
-      const userAlreadyExists = await UserModel.findOne({
-        where: { email },
-        select: ['id'],
-      });
+      const userAlreadyExists = await UserModel.findOne(
+        {
+          email,
+        },
+        'id'
+      ).exec();
 
       if (userAlreadyExists) {
         return [
@@ -39,7 +46,7 @@ module.exports.resolvers = {
         ];
       }
 
-      const user = UserModel.create({
+      const user = new UserModel({
         email,
         password,
       });
